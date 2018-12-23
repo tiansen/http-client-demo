@@ -19,7 +19,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.Args;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
@@ -32,11 +31,11 @@ public class HttpWrapper {
     private CloseableHttpClient client;
 
 
-    public HttpWrapper(){
+    public HttpWrapper() {
         init();
     }
 
-    public void init(){
+    public void init() {
         ConnectionSocketFactory plainSocketFactory = PlainConnectionSocketFactory.getSocketFactory();
         LayeredConnectionSocketFactory sslSocketFactory = SSLConnectionSocketFactory.getSocketFactory();
         Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create().register("http", plainSocketFactory)
@@ -98,7 +97,7 @@ public class HttpWrapper {
          */
         clientBuilder.setKeepAliveStrategy((httpResponse, httpContext) -> {
             BasicHeaderElementIterator it = new BasicHeaderElementIterator(httpResponse.headerIterator("Keep-Alive"));
-            while(true) {
+            while (true) {
                 String param;
                 String value;
                 do {
@@ -110,8 +109,8 @@ public class HttpWrapper {
                         HeaderElement he = it.nextElement();
                         param = he.getName();
                         value = he.getValue();
-                    } while(value == null);
-                } while(!param.equalsIgnoreCase("timeout"));
+                    } while (value == null);
+                } while (!param.equalsIgnoreCase("timeout"));
 
                 try {
                     return Long.parseLong(value) * 1000L;
